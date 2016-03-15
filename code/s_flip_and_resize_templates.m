@@ -1,8 +1,8 @@
 mandatoryTemplatePath = '../mandatory/templates/';
 dangerTemplatePath = '../danger/templates/';
-prohibitoryTemplatePath = '../danger/templates/';
+prohibitoryTemplatePath = '../prohibitory/templates/';
 
-currentPath = prohibitoryTemplatePath;
+currentPath = dangerTemplatePath;
 
 files = dir(currentPath);
 %filter out directories from this list
