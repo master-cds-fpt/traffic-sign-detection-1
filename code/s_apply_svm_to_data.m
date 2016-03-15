@@ -1,8 +1,14 @@
-mandatory_positive = [];
+load('../data/positiveSamples', 'bluePositiveSamples', 'redPositiveSamples');
+bluePositiveSamples = squeeze(bluePositiveSamples);
+redPositiveSamples = squeeze(redPositiveSamples);
+
+k = randperm(size(bluePositiveSamples,1)); 
+mandatory_positive = bluePositiveSamples(k(1:15000),:);
 mandatory_negative = [];
 
-prohibitory_positive = [];
-prohibitory_negative = [];
+k = randperm(size(redPositiveSamples,1)); 
+prohibitory_positive = redPositiveSamples(k(1:15000),:);
+prohibitory_negative = mandatory_negative;
 
 danger_positive = prohibitory_positive;
 danger_negative = [];
