@@ -1,4 +1,4 @@
-function f_apply_svm(SVMMOdel,input_path,output_path)
+function f_apply_svm(SVMModel,input_path,output_path)
 for i = 1:600
 	file_name = sprintf('%05d.ppm',i);
 	out_file_name = sprintf('%05d',i);
@@ -7,11 +7,11 @@ for i = 1:600
 	img = double(imread(gtFilePath));
 	H = size(img,1);
 	W = size(img,2);
-	img = reshape(img,H*W,3);
-	label = f_predict_svm(SVMMOdel,img);
+	X = reshape(img,H*W,3);
+	[~,score] = predict(SVMModel,X);
+	label = score(:,2);
+	label(label<-1)=-1;
+	label(label>1)=1;
 	img = reshape(label,H,W);
-	size(img)
-	figure;
-	imagesc(img)
 	save(wtFilePAth,'img');
 end
