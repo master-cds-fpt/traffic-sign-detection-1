@@ -1,6 +1,7 @@
-function labels = f_predict(X,SVMModel):
+function labels = f_predict_svm(SVMModel,X)
 
 [~,score] = predict(SVMModel,X);
-score(score=<-1)=-1;
-score(score>=1)=1;
-labels = score
+labels = score(:,2);
+% labels
+lables(labels<=-1)=-1;
+labels(labels>=1)=1;
