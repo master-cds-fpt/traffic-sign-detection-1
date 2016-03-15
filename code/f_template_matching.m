@@ -1,7 +1,8 @@
-function [x,y,score] = f_template_matching(img,template,threshold)
+function [x,y,score,order] = f_template_matching(img,template,threshold)
 template = fliplr(flipud(template))
 scale = 1.1;
 [x,y,score] = sub_scale_matching(img,template,threshold);
+order = zeros(size(score));
 
 for k = 1:22
 	img = imresize(img,1/scale);
@@ -9,6 +10,7 @@ for k = 1:22
 	x_ = [x_ floor(x_./(scale^k))];
 	y_ = [y_ floor(x_./(scale^k))];
 	score = [score score_];
+	order = [order,k*ones(size(score_))]
 end
 x = [x x_];
 y = [y y_];
