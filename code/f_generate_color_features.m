@@ -1,4 +1,4 @@
-function [ hueHist, satHist ] = f_generate_color_features( roi )
+function [ features ] = f_generate_color_features( roi )
 
     %assuming roi image is 32 X 32
     %[h,w] = size(roi);
@@ -24,4 +24,9 @@ function [ hueHist, satHist ] = f_generate_color_features( roi )
     hueHist = blockproc(hueMat, [8,8], hueFun);
     satHist = blockproc(satMat, [8,8], satFun);
     
+    hueHist = hueHist';
+    satHist = satHist';
+    
+    features = [hueHist(:), satHist(:)];
+    features = features(:);
 end
