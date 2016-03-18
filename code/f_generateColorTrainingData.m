@@ -39,6 +39,11 @@ function [ positiveSamples ] = f_generateColorTrainingData( imgRootPath, ...
         
         %for each file in directory
         for fileId = 1:size(listOfFiles, 1)
+
+            if(size(positiveSamples,1)>2500)
+                break;
+            end
+
             %get filePath
             filePath = strcat(folderName, listOfFiles(fileId).name);
             
@@ -55,8 +60,7 @@ function [ positiveSamples ] = f_generateColorTrainingData( imgRootPath, ...
                 channel3 = 3;
             end
             
-            positiveColorIdx = find((img(:,:,colorChannel) > img(:,:, channel2) ...
-                + img(:,:,channel3)) & (img(:,:,colorChannel) > channelThreshold) );
+            positiveColorIdx = find(img(:,:,colorChannel)>170 & img(:,:,channel2)<70  & img(:,:,channel3) <70 );
             
             [i,j] = ind2sub([size(img,1), size(img,2)], positiveColorIdx);
             for idx = 1:size(i,1)

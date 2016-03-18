@@ -1,5 +1,5 @@
 function img = f_apply_svm(SVMModel,input_path,output_path)
-for i = 1:600
+for i = 0:900
 	file_name = sprintf('%05d.ppm',i);
 	out_file_name = sprintf('%05d',i);
 	gtFilePath = strcat(input_path,file_name);
@@ -13,8 +13,5 @@ for i = 1:600
 	img = reshape(label,H,W);
 	img(img<-1)=-1;
 	img(img>1)=1;
-	%%figure;
-	%imagesc(img);
-	%colormap gray;	
 	save(wtFilePAth,'img');
 end

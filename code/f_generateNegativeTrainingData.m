@@ -7,7 +7,7 @@ function [ negativeColorSamples ] = f_generateNegativeTrainingData( imgRootPath,
     %                      positive
     %imgRootPath          :Root path for images
     
-    numSamples = 200000;
+    numSamples = 2000;
 
     imgRootPath = '../files/';
 
@@ -29,7 +29,10 @@ function [ negativeColorSamples ] = f_generateNegativeTrainingData( imgRootPath,
     end
 
     for imgId = 1:600
-    
+        if(size(negativeColorSamples,1)>2500)
+            break;
+        end
+
         imgPath = strcat(imgRootPath, listOfFiles(imgId).name);
         img = imread(imgPath);
         
@@ -38,12 +41,12 @@ function [ negativeColorSamples ] = f_generateNegativeTrainingData( imgRootPath,
         
         numElements = width*height;
         
-        for pointCounter=1:1000
+        for pointCounter=1:50
             randomIndex = randi([1, numElements]);
             [i,j] = ind2sub([size(img,1), size(img,2)], randomIndex);
             color = img(i,j,:);
 
-            if(color(colorChannel) < color(channel2) & color(colorChannel)<color(channel3))
+            if( ~(color(colorChannel)>150 & color(channel2)<70  & color(channel3) <70 ))
                 negativeColorSamples = [negativeColorSamples, img(i,j,:)];
             end        
         end    
