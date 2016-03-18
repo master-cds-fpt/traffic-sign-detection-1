@@ -1,4 +1,4 @@
-function [features, featureMin, normalizer] = f_generate_recognition_training_data( gtCategoryStruct, imageRoot )
+function [features] = f_generate_recognition_testing_data( gtCategoryStruct, imageRoot, featureMean, featureStd )
     filePaths = [];
     features = [];
     
@@ -43,15 +43,9 @@ function [features, featureMin, normalizer] = f_generate_recognition_training_da
         features = [features; currentFeatures];
     end
     
-    featureMax = max(features);
-    featureMin = min(features);
-    minMat = repmat(featureMin, [size(features,1),1]);
-    normalizer = featureMax -featureMin;
-    normalizer(normalizer == 0) =1;
-    
-    
-    features = features - minMat;
-    features = bsxfun(@rdivide, features, normalizer);
+    meanMat = repmat(featureMean, [size(features, 1),1]);
+    features = features - meanMat;
+    features = bsxfun(@rdivide, features, featureStd);
     
 end
 

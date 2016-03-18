@@ -32,13 +32,22 @@ for i = 1:trainingLimit
 end
 
 %generate training data for prohibitory files
-[prohibitoryFeatures, prohibitoryMin, prohibitoryNormalizer] = f_generate_recognition_training_data( prohibitoryFiles, imageRoot );
+prohibitoryFeatures = f_generate_recognition_training_data( prohibitoryFiles, imageRoot );
+prohibitoryMean = mean(prohibitoryFeatures, 1);
+meanMat = repmat(prohibitoryMean, [size(prohibitoryFeatures, 1),1]);
+prohibitoryFeatures = prohibitoryFeatures - meanMat;
+
 
 %generate training data for mandatory files
-[mandatoryFeatures, mandatoryMin, mandatoryNormalizer] = f_generate_recognition_training_data( mandatoryFiles, imageRoot);
+[mandatoryFeatures, mandatoryMean, mandatoryStd] = f_generate_recognition_training_data( mandatoryFiles, imageRoot);
 
 %generate training data for danger files
-[dangerFeatures, dangerMin, dangerNormalizer] = f_generate_recognition_training_data( dangerFiles, imageRoot);
+dangerFeatures = f_generate_recognition_training_data( dangerFiles, imageRoot);
+dangerMean = mean(dangerFeatures, 1);
+meanMat = repmat(dangerMean, [size(dangerFeatures, 1),1]);
+dangerFeatures = dangerFeatures - meanMat;
 
-%generate other features
-[otherFeatures, otherMin, otherNormalizer] = f_generate_recognition_training_data(otherFiles, imageRoot);
+otherFeatures = f_generate_recognition_training_data(otherFiles, imageRoot);
+otherMean = mean(otherFeatures, 1);
+meanMat = repmat(otherMean, [size(otherFeatures, 1),1]);
+otherFeatures = otherFeatures - meanMat;
