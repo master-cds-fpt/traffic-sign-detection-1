@@ -13,6 +13,7 @@ numOfTrafficSigns = size(rGTdata,2);
 prohibitoryFiles = [];
 mandatoryFiles = [];
 dangerFiles = [];
+otherFiles = [];
 
 
 %filter ground truth data
@@ -23,6 +24,8 @@ for i = 1:numOfTrafficSigns
         prohibitoryFiles = [prohibitoryFiles; rGTdata(i)];
     elseif strcmp(rGTdata(i).category, 'danger')
         dangerFiles = [dangerFiles; rGTdata(i)];
+    elseif strcmp(rGTdata(i).category, 'other')
+        otherFiles = [otherFiles; rGTdata(i)];
     end
 end
 
@@ -35,3 +38,4 @@ mandatoryFeatures = f_generate_recognition_training_data( mandatoryFiles, imageR
 %generate training data for danger files
 dangerFeatures = f_generate_recognition_training_data( dangerFiles, imageRoot);
 
+otherFeatures = f_generate_recognition_training_data(otherFiles, imageRoot);

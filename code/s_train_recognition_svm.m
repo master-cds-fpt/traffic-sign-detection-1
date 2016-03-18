@@ -16,9 +16,7 @@ mvsoModel = f_train_recognition_svm(mandatoryFeatures, otherFeatures, 'ma', 'ot'
 %danger vs other model
 dvsoModel = f_train_recognition_svm(dangerFeatures, otherFeatures, 'da', 'ot');
 
+save('../data/recognitonModels', 'pvsmModel' ,'pvsdModel', 'mvsdModel', 'pvsoModel', 'mvsoModel', 'dvsoModel');
 
-
-
-
-[a,b] = predict(pvsmModel, mandatoryFeatures);
+%[a,b] = predict(pvsmModel, mandatoryFeatures);
 
