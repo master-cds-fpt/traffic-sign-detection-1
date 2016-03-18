@@ -43,6 +43,10 @@ function [rois] = f_template_matching(img_name,threshold)
     ids = find((rois(:,1) > 0) & (rois(:,2) > 0));
     rois = rois(ids,:);
     score = score(ids);
+    score = score(score > 0.3);
+    rois = rois(score > 0.3,:);
+    display(rois);
+    display(score);
 	rois = remove_overlapping_regions(rois,score);
 end
 
@@ -102,8 +106,8 @@ function [resRoi,resScore] = remove_overlapping_regions(roi,score)
             end
 
 			if get_overlap(roi(i,:),roi(j,:)) > 0.2
-				[i,j]
-                if score(i) > score(j)
+                %if score(i) > score(j)
+                if abs(roi(i,4) - roi(i,2)) > abs(roi(j,4) - roi(j,2))
 					flag(j)=0;
 				else
 					flag(i)=0;
@@ -111,8 +115,6 @@ function [resRoi,resScore] = remove_overlapping_regions(roi,score)
 			end
 		end
     end 
-    size(flag==1)
-    size(roi)
 	resRoi = roi(flag==1,:);
 	resScore = score(flag==1);
 
@@ -140,7 +142,6 @@ function overlap = get_overlap( resRoi, gtRoi )
 	    A2 = (gtRoi(3) - gtRoi(1) + 1) * (gtRoi(4) - gtRoi(2) + 1);
 
 	    overlap = max([intersectArea/A1 intersectArea/A2]);
-        overlap
 	end
 end
 
