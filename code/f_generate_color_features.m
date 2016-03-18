@@ -1,4 +1,4 @@
-function [ features ] = f_generate_color_features( roi )
+function features  = f_generate_color_features( roi )
 
     %assuming roi image is 32 X 32
     %[h,w] = size(roi);
