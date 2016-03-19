@@ -60,7 +60,7 @@ function [ positiveSamples ] = f_generateColorTrainingData( imgRootPath, ...
                 channel3 = 3;
             end
             
-            positiveColorIdx = find(img(:,:,colorChannel)>170 & img(:,:,channel2)<70  & img(:,:,channel3) <70 );
+            positiveColorIdx = find(img(:,:,colorChannel)>170 & img(:,:,channel2)<130  & img(:,:,channel3) <130 );
             
             [i,j] = ind2sub([size(img,1), size(img,2)], positiveColorIdx);
             for idx = 1:size(i,1)

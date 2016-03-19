@@ -1,11 +1,12 @@
 function f_display_roi(img_name,rois)
 	file_name = sprintf('%05d.ppm',img_name);
 	gtFilePath = strcat('../files/',file_name);
-	img = imread(gtFilePath);
+	img = imread(gt
+    
     rois(:,3) = rois(:,3)-rois(:,1);
 	rois(:,4) = rois(:,4)-rois(:,2);
 	figure;
-	imagesc(img);cl
+	imagesc(img);
 	colormap gray;
 	hold on;
 	for i =1:size(rois,1)
