@@ -1,5 +1,6 @@
 function [rois] = f_template_matching(img_name,img_path,template_path)
 	load(strcat(img_path,img_name),'img');
+	display(img_name);
 	templates = extract_templates(template_path);
 	
 	scale = 1.1;
@@ -9,13 +10,14 @@ function [rois] = f_template_matching(img_name,img_path,template_path)
 		img = imresize(img,1/scale);
 		[rois_,score_] = sub_scale_matching(img, templates);	
 		rois = [rois ;floor(rois_.*(scale^k))];
-		score = [score ; score_];
+		score = [score score_];
+    	    
     end
 	
     ids = find((rois(:,1) > 0) & (rois(:,2) > 0));
     rois = rois(ids,:);
     score = score(ids);
-    threshold = 0.2*max(score);
+	threshold = 0.2*max(score);
     rois = rois(score > threshold,:);
     score = score(score > threshold);
     
@@ -32,6 +34,7 @@ function [rois,score] = sub_scale_matching(img,templates)
     
     [xdetections, ydetections, score] = get_distinct_detections(R);
     [rois] = generate_rois_from_points(xdetections, ydetections);
+    
     
 	% for id =1:size(x,1)
 	% 	roi = [x-7 y-7 x+8 y+8];
@@ -142,7 +145,7 @@ function [xdetections, ydetections, score] = get_distinct_detections(R)
 end
 
 function [rois] = generate_rois_from_points(xdetections, ydetections)
-    rois = zeros([3,4]);
+    rois = [];%
     w = 16;
     h = 16;
     for i = 1:length(xdetections)

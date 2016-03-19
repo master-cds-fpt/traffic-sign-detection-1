@@ -27,13 +27,12 @@ function [ negativeColorSamples ] = f_generateNegativeTrainingData( imgRootPath,
     elseif channel3 == 0
         channel3 = 3;
     end
-
+    id = randi(600,600,1);
     for imgId = 1:600
         if(size(negativeColorSamples,1)>2500)
             break;
         end
-
-        imgPath = strcat(imgRootPath, listOfFiles(imgId).name);
+        imgPath = strcat(imgRootPath, listOfFiles(id(imgId)).name);
         img = imread(imgPath);
         
         width = size(img, 1);
@@ -46,7 +45,7 @@ function [ negativeColorSamples ] = f_generateNegativeTrainingData( imgRootPath,
             [i,j] = ind2sub([size(img,1), size(img,2)], randomIndex);
             color = img(i,j,:);
 
-            if( ~(color(colorChannel)>150 & color(channel2)<70  & color(channel3) <70 ))
+            if((color(colorChannel)<120 | (color(colorChannel) < (color(channel2)))|(color(colorChannel) < (color(channel3))) | (color(colorChannel)>230 & (color(channel2))>200  & (color(channel3))>200 )))
                 negativeColorSamples = [negativeColorSamples, img(i,j,:)];
             end        
         end    

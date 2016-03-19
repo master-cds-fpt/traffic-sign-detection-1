@@ -5,27 +5,27 @@ bluePositiveSamples = double(squeeze(bluePositiveSamples));
 redPositiveSamples = double(squeeze(redPositiveSamples));
 rng(10);
 % k = randperm(size(bluePositiveSamples,1)); 
-% mandatory_positive = bluePositiveSamples(k(1:1000),:);
+% mandatory_positive = bluePositiveSamples(k(:),:);
 
 % mandatory_negative = double(squeeze(blueNegativeSamples));
 % k = randperm(size(mandatory_negative,1)); 
 % mandatory_negative = mandatory_negative(k(:),:);
 
 k = randperm(size(redPositiveSamples,1)); 
-prohibitory_positive = redPositiveSamples(k(1:50),:);
+prohibitory_positive = redPositiveSamples(k(:),:);
 
 prohibitory_negative = double(squeeze(redNegativeSamples));
 k = randperm(size(prohibitory_negative,1)); 
-prohibitory_negative = prohibitory_negative(k(1:150),:);
+prohibitory_negative = prohibitory_negative(k(1:1000),:);
 
-danger_positive = prohibitory_positive;
-danger_negative = [];
+% danger_positive = prohibitory_positive;
+% danger_negative = [];
 
 % mandatory_SVMModel = f_train_svm(mandatory_positive/255,mandatory_negative/255);
 prohibitory_SVMModel = f_train_svm(prohibitory_positive/225,prohibitory_negative/225);
 % danger_SVMModel = f_train_svm(danger_positive,danger_negative);
 
-% save('../SVMModels/mandatory_SVMModel','mandatory_SVMModel');
+save('../SVMModels/mandatory_SVMModel','mandatory_SVMModel');
 save('../SVMModels/prohibitory_SVMModel','prohibitory_SVMModel');
 % save('../SVMModels/danger_SVMModel','danger_SVMModel');
 imageRoot = '../files/';
