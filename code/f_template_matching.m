@@ -1,41 +1,13 @@
-function [rois] = f_template_matching(img_name,threshold)
-	load(strcat('../mandatory/',img_name),'img');
-	mandatory_img = img;
-
-	%load(strcat('..\prohibitory\',img_name),'img');
-	prohibitory_img = img;
-
-	%load(strcat('..\prohibitory\',img_name),'img');
-	danger_img = img;
-
-	% mandatory_img = imread(strcat('..\mandatory\',img_name));
-	% prohibitory_img = imread(strcat('..\prohibitory\',img_name));
-	% danger_img = imread(strcat('..\mandatory\',img_name));
-
-	mandatory_template_path = ('../mandatory/templates/');
-	prohibitory_template_path = ('../prohibitory/templates/');
-	danger_template_path = ('../danger/templates/');
-
-	mandatory_templates = extract_templates(mandatory_template_path);
-	prohibitory_templates = extract_templates(prohibitory_template_path);
-	danger_templates = extract_templates(danger_template_path);
-
-    
-    %mandatory image, prohibitory image and danger image are svm outputs of
-    %the same image with corresponding svms
-    
+function [rois] = f_template_matching(img_name,img_path,template_path)
+	load(strcat(img_path,img_name),'img');
+	templates = extract_templates(template_path);
+	
 	scale = 1.1;
-	[rois,score] = sub_scale_matching(mandatory_img,prohibitory_img,danger_img, ...
-		  mandatory_templates,prohibitory_templates,danger_templates,threshold);
+	[rois,score] = sub_scale_matching(img, templates);
 	order = zeros(size(score));
-
 	for k = 1:22
-		mandatory_img = imresize(mandatory_img,1/scale);
-        prohibitory_img = imresize(prohibitory_img,1/scale);
-        danger_img = imresize(danger_img,1/scale);
-        
-		[rois_,score_] = sub_scale_matching(mandatory_img,prohibitory_img,danger_img, ...
-		  mandatory_templates,prohibitory_templates,danger_templates,threshold);
+		img = imresize(img,1/scale);
+		[rois_,score_] = sub_scale_matching(img, templates);	
 		rois = [rois ;floor(rois_.*(scale^k))];
 		score = [score ; score_];
     end
@@ -43,38 +15,24 @@ function [rois] = f_template_matching(img_name,threshold)
     ids = find((rois(:,1) > 0) & (rois(:,2) > 0));
     rois = rois(ids,:);
     score = score(ids);
-    score = score(score > 0.3);
-    rois = rois(score > 0.3,:);
-    display(rois);
-    display(score);
-	rois = remove_overlapping_regions(rois,score);
+    threshold = 0.2*max(score);
+    rois = rois(score > threshold,:);
+    score = score(score > threshold);
+    
+    rois = remove_overlapping_regions(rois,score);
 end
 
-function [rois,score] = sub_scale_matching(mandatory_img,prohibitory_img,danger_img, ...
-		  mandatory_templates,prohibitory_templates,danger_templates, threshold)
+function [rois,score] = sub_scale_matching(img,templates)
 	% roi = [ulx, uly, lrx, lry]
 	% rois = [roi]
-	R = zeros(size(mandatory_img));
-	for i =1:size(mandatory_templates,3)
-		R = bsxfun(@max,R,conv2(mandatory_img, mandatory_templates(:,:,i),'SAME'));
+	R = zeros(size(img));
+	for i =1:size(templates,3)
+		R = bsxfun(@max,R,conv2(img, templates(:,:,i),'SAME'));
     end
     
     [xdetections, ydetections, score] = get_distinct_detections(R);
     [rois] = generate_rois_from_points(xdetections, ydetections);
     
-% 	for i =1:size(prohibitory_templates,3)
-% 		R = bsxfun(@max,R,conv2(prohibitory_img, prohibitory_templates(:,:,i),'SAME'));
-% 	end
-% 
-% 	for i =1:5
-% 		size(danger_templates)
-% 		R = bsxfun(@max,R,1.2*conv2(danger_img, danger_templates(:,:,i),'SAME'));
-% 	end
-% 
-% 	for i =6:10
-% 		R = bsxfun(@max,R,conv2(danger_img, danger_templates(:,:,i),'SAME'));
-% 	end
-
 	% for id =1:size(x,1)
 	% 	roi = [x-7 y-7 x+8 y+8];
 	% 	rois = [rois roi];
@@ -181,11 +139,6 @@ function [xdetections, ydetections, score] = get_distinct_detections(R)
         end
         itr = itr+1;
     end
-    
-    display(xdetections);
-    display(ydetections);
-    display(score);
-    
 end
 
 function [rois] = generate_rois_from_points(xdetections, ydetections)
